@@ -1,6 +1,6 @@
 # 📱 PhonePe Saga Application
 
-This project is a microservices-based wallet system using Spring Boot, Kafka, and Docker. It supports account creation, balance transfer, transaction history, and inter-service communication through Kafka events.
+This project is a microservices-based phonepe saga system using Spring Boot, Kafka, and Docker. It supports account creation, balance transfer, transaction history, and inter-service communication through Kafka events.
 
 ---
 
