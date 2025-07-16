@@ -15,39 +15,42 @@ This project is a microservices-based phonepe saga system using Spring Boot, Kaf
 - docker-compose.yml # Runs all services and Kafka
 - pom.xml # Parent Maven file (multi-module)
 
-## 🔄 Workflow Overview
 
-### 1. **Initiate Transfer** (`account-service`)
-- A user requests a balance transfer.
-- `account-service` saves the transaction with status `PENDING`.
-- It produces a Kafka message to a topic (e.g., `wallet.transfer.request`).
+## 🔄 Workflow: Saga Pattern via Kafka
 
-### 2. **Validate and Transfer** (`wallet-service`)
-- Consumes the Kafka event.
-- Validates account number and balance.
-- If validation passes:
-  - Transfers the amount.
-  - Produces a Kafka message with result: `SUCCESS`.
-- If validation fails:
-  - Produces a Kafka message with result: `FAILED`.
+### 1. `account-service` – Initiates Transfer
+- Accepts transfer request.
+- Saves transaction with status `PENDING`.
+- Produces Kafka message to `wallet.transfer.request`.
 
-### 3. **Update Transaction Status**
-- **`transaction-history-service`**:
-  - Consumes result message from Kafka.
-  - Saves the transaction with status `SUCCESS` or `FAILED`.
+### 2. `wallet-service` – Validates and Transfers
+- Consumes the Kafka message.
+- Verifies:
+  - Valid account numbers
+  - Sufficient balance
+- If **valid**:
+  - Transfers funds.
+  - Produces Kafka message to `wallet.transfer.result` with status `SUCCESS`.
+- If **invalid**:
+  - Produces message with status `FAILED`.
 
-- **`account-service`**:
-  - Updates the original transaction record from `PENDING` to `SUCCESS` or `FAILED`.
+### 3. `transaction-history-service` – Records the Outcome
+- Consumes `wallet.transfer.result`.
+- Stores transaction with final status `SUCCESS` or `FAILED`.
+
+### 4. `account-service` – Final Status Update
+- Also consumes the result message.
+- Updates initial transaction from `PENDING` to `SUCCESS` or `FAILED`.
 
 ---
 
 ## ⚙️ Tech Stack
 
-- **Spring Boot** - REST APIs & service layers
-- **Apache Kafka** - Event-driven communication
-- **Maven** - Build and dependency management
-- **Docker & Docker Compose** - Container orchestration
-- **MySQL** - Database for services
+- **Java 17**, **Spring Boot**
+- **Apache Kafka**
+- **Maven**
+- **Docker & Docker Compose**
+- **PostgreSQL / MySQL**
 
 ---
 
@@ -56,14 +59,14 @@ This project is a microservices-based phonepe saga system using Spring Boot, Kaf
 ### Prerequisites
 
 - Java 17+
-- Docker & Docker Compose
 - Maven 3.8+
+- Docker & Docker Compose
 
-### Running the Project
+### Run All Services
 
 ```bash
-# Build all services
+# 1. Build the project
 mvn clean install
 
-# Start all services and Kafka
+# 2. Start services with Kafka
 docker-compose up --build
