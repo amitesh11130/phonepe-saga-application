@@ -6,15 +6,14 @@ This project is a microservices-based phonepe saga system using Spring Boot, Kaf
 
 ## 🧱 Project Structure
 
-phonepe-saga-application/
-│
-├── account-service/ # initiates transfers & fetch all transfers
-├── wallet-service/ # Validates accounts, updates balances
-├── transaction-history-service/ # Records transaction outcomes
-├── commons-dtos/ # Shared DTOs between services
-├── docker-compose.yml # Runs all services and Kafka
-└── pom.xml # Parent Maven file (multi-module)
----
+### phonepe-saga-application
+
+- account-service/ # initiates transfers & fetch all transfers
+- wallet-service/ # Validates accounts, updates balances
+- transaction-history-service/ # Records transaction outcomes
+- commons-dtos/ # Shared DTOs between services
+- docker-compose.yml # Runs all services and Kafka
+- pom.xml # Parent Maven file (multi-module)
 
 ## 🔄 Workflow Overview
 
